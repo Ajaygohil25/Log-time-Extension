@@ -17,20 +17,6 @@ log-time-eta-extension/
 
 ---
 
-## 🔧 How It Works
-1. **Extract Time**  
-   Uses `chrome.scripting.executeScript` to inject `getTimeElementText()` into the active tab and grab the `<span>` text (e.g., `05:22:03`).
-2. **Parse Time**  
-   Converts `HH:MM:SS` into total seconds with `parseTime()`.
-3. **Compute ETAs**  
-   For each entry in the **`targetTimes`** array, calculates `remaining = targetSeconds - loggedSeconds`.
-4. **Render Results**  
-   Builds a card for each target, showing the label and either:
-   - **ETA** in 12-hour format (`🕒 02:28 PM`), or
-   - **Completed** if `remaining <= 0`.
-
----
-
 ## ⚙️ Customization
 Open **`popup.js`** and modify the `targetTimes` array at the top:
 ```js
@@ -49,7 +35,7 @@ function getTimeElementText() {
   // e.g., using a table cell data-index
   const cells = document.querySelectorAll("td[data-index='4'] span.globalTable-Badge-label");
   if (cells.length) return cells[cells.length-1].textContent.trim();
-  const fallback = document.querySelector("span.globalTable-Badge-label");
+  onsct fallback = document.querySelector("span.globalTable-Badge-label");
   return fallback ? fallback.textContent.trim() : null;
 }
 ```
