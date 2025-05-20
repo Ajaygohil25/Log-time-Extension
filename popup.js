@@ -4,7 +4,7 @@
   const targetTimes = [
     { label: 'Workday', hours: 8, minutes: 20 },
     { label: 'Flexible', hours: 7, minutes: 0 },
-    { label: 'Halfday', hours: 4, minutes: 20 },
+    { label: 'Half day', hours: 4, minutes: 20 },
 
     // Example for 9hr: 
     // { label: 'Workday', hours: 9, minutes: 0 },
