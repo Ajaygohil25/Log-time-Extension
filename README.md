@@ -5,6 +5,7 @@ A lightweight Chrome extension that calculates when you will complete your speci
 ---
 
 ## 🗂️ Project Structure
+
 ```
 log-time-eta-extension/
 ├── manifest.json       # Extension metadata and permissions
@@ -18,7 +19,9 @@ log-time-eta-extension/
 ---
 
 ## ⚙️ Customization
+
 Open **`popup.js`** and modify the `targetTimes` array at the top:
+
 ```js
 const targetTimes = [
   { label: 'Workday', hours: 8, minutes: 0 },
@@ -26,15 +29,19 @@ const targetTimes = [
   { label: 'Overtime', hours: 9, minutes: 0 },
 ];
 ```
+
 - **Add or remove** items for any required thresholds.
 - No other code changes are needed.
 
-If your portal uses a different HTML structure, adjust the selector in `getTimeElementText()` inside **`popup.js`**:
+If your portal uses a different HTML structure, adjust the selector in **`getTimeElementText()`** inside **`popup.js`**:
+
 ```js
 function getTimeElementText() {
   // e.g., using a table cell data-index
   const cells = document.querySelectorAll("td[data-index='4'] span.globalTable-Badge-label");
-  if (cells.length) return cells[cells.length-1].textContent.trim();
+  if (cells.length) {
+    return cells[cells.length - 1].textContent.trim();
+  }
   const fallback = document.querySelector("span.globalTable-Badge-label");
   return fallback ? fallback.textContent.trim() : null;
 }
@@ -43,18 +50,22 @@ function getTimeElementText() {
 ---
 
 ## 🚀 Installation
-1. **Clone** the repo:
+
+1. **Clone the repo**:
+   
    ```bash
-git clone https://github.com/Ajaygohil25/Log-time-Extension.git
+   git clone https://github.com/Ajaygohil25/Log-time-Extension.git
    ```
-2. **Open** Chrome and go to `chrome://extensions/`.
-3. **Enable** **Developer mode** (toggle top-right).
-4. **Load unpacked** and select the `log-time-eta-extension` folder.
-5. **Pin** the extension and click the icon while on your portal page.
+
+2. **Open Chrome** and navigate to `chrome://extensions/`.
+3. **Enable Developer mode** (toggle in the top-right corner).
+4. **Click Load unpacked** and select the `log-time-eta-extension` folder.
+5. **Pin the extension** and click its icon while on your portal page.
 
 ---
 
 ## 📃 License
+
 MIT © Ajay Gohil
 
 ---
