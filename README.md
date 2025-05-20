@@ -35,7 +35,7 @@ function getTimeElementText() {
   // e.g., using a table cell data-index
   const cells = document.querySelectorAll("td[data-index='4'] span.globalTable-Badge-label");
   if (cells.length) return cells[cells.length-1].textContent.trim();
-  onsct fallback = document.querySelector("span.globalTable-Badge-label");
+  const fallback = document.querySelector("span.globalTable-Badge-label");
   return fallback ? fallback.textContent.trim() : null;
 }
 ```
@@ -56,6 +56,7 @@ git clone https://github.com/Ajaygohil25/Log-time-Extension.git
 
 ## 📃 License
 MIT © Ajay Gohil
+
 ---
 
 *Built with ❤️ to simplify your daily time tracking.*
