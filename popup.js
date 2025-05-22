@@ -1,14 +1,14 @@
 (async () => {
   // === Configure your target times ===
-  // Add or remove entries to suit your office hours
   const targetTimes = [
     { label: 'Workday', hours: 8, minutes: 20 },
     { label: 'Flexible', hours: 7, minutes: 0 },
     { label: 'Half day', hours: 4, minutes: 20 },
-
-    // Example for 9hr: 
-    // { label: 'Workday', hours: 9, minutes: 0 },
   ];
+
+  // Define a fixed office start time (e.g., 10:00 AM)
+  const OFFICE_START_HOUR = 10;
+  const OFFICE_START_MIN = 0;
 
   // Extracts the time string from the active page
   function getTimeElementText() {
@@ -35,7 +35,23 @@
     return future.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
   }
 
-  // Builds the output cards fragment
+  // Adjusts logged time to start counting from fixed start (e.g. 10:00 AM)
+  function getAdjustedLoggedTime(loggedSec) {
+    const now = new Date();
+    const officeStart = new Date();
+    officeStart.setHours(OFFICE_START_HOUR, OFFICE_START_MIN, 0, 0);
+
+    const actualStart = new Date(now.getTime() - loggedSec * 1000);
+
+    if (actualStart < officeStart) {
+      const offset = (officeStart - actualStart) / 1000;
+      return Math.max(0, loggedSec - offset);
+    }
+
+    return loggedSec;
+  }
+
+  // Builds the output cards
   function buildOutput(loggedSec) {
     const fragment = document.createDocumentFragment();
     targetTimes.forEach(({ label, hours, minutes }) => {
@@ -63,16 +79,24 @@
   const outputEl = document.getElementById('output');
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    chrome.scripting.executeScript({ target: { tabId: tab.id }, func: getTimeElementText }, (results) => {
-      const raw = results[0]?.result;
-      const loggedSec = parseTime(raw);
-      if (loggedSec === null) {
-        outputEl.innerHTML = `<div class="error">Could not parse time: "${raw || ''}"</div>`;
-        return;
+    chrome.scripting.executeScript(
+      {
+        target: { tabId: tab.id },
+        func: getTimeElementText
+      },
+      (results) => {
+        const raw = results[0]?.result;
+        const loggedSec = parseTime(raw);
+        if (loggedSec === null) {
+          outputEl.innerHTML = `<div class="error">Could not parse time: "${raw || ''}"</div>`;
+          return;
+        }
+
+        const adjustedSec = getAdjustedLoggedTime(loggedSec);
+        outputEl.innerHTML = '';
+        outputEl.appendChild(buildOutput(adjustedSec));
       }
-      outputEl.innerHTML = '';
-      outputEl.appendChild(buildOutput(loggedSec));
-    });
+    );
   } catch (err) {
     console.error(err);
     outputEl.innerHTML = '<div class="error">Unexpected error. See console.</div>';
